@@ -17,6 +17,12 @@ if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
   exit 1
 fi
 
+
+if [ -z "$AWS_S3_ENDPOINT" ]; then
+  echo "AWS_S3_ENDPOINT is not set. Quitting."
+  exit 1
+fi
+
 if [ -z "$AWS_DEFAULT_REGION" ]; then
   echo "AWS_DEFAULT_REGION is not set. Quitting."
   exit 1
@@ -42,7 +48,7 @@ echo "Run yarn build"
 yarn run build
 
 echo "Copying to website folder"
-aws s3 sync ./build s3://${AWS_S3_BUCKET} --exact-timestamps --delete --region ${AWS_DEFAULT_REGION} $*
+aws s3 sync ./build s3://${AWS_S3_BUCKET} --exact-timestamps --delete --endpoint-url ${AWS_S3_ENDPOINT} --region ${AWS_DEFAULT_REGION} $*
 
 echo "Cleaning up things"
 
